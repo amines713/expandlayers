@@ -3,11 +3,19 @@ interface Best {
 	i?: number
 }
 
+interface Options {
+	lower?: 'hard'|'soft';
+	upper?: 'hard'|'soft';
+	overflow?: 'lower'|'upper';
+}
 
+const defaultOptions: Options = {
+	lower: 'soft',
+	upper: 'soft',
+	overflow: 'lower'
+}
 
-
-
-const computeNewBoundaries = (firstLayer: number, layers: number[], boundaries: number[], delta: number[], set: number[], N: number) => {
+const computeNewBoundaries = (firstLayer: number, layers: number[], boundaries: number[], delta: number[], set: number[], N: number, options: Options) => {
 	//squares = each term to square and add up. Will add i to each on iteration. Non-end ones get doubled
 	//First element always starts as 0
 	let squares = Array(delta.length + 1).fill(0)
@@ -25,11 +33,13 @@ const computeNewBoundaries = (firstLayer: number, layers: number[], boundaries: 
 
 	let i = 0
 
-	if (firstLayer + set.length === layers.length) {//Last Layer. Only move up
+	// Hard upper limit
+	if (options.upper === 'hard' && firstLayer + set.length === layers.length) {//Last Layer. Only move up
 		i = N
 	}
 
-	if (i !== N && firstLayer === 0) {//First Layer. Keep N=0, only move down
+	// Hard lower limit
+	if (options.lower === 'hard' && i !== N && firstLayer === 0) {//First Layer. Keep N=0, only move down
 		N = 0
 	}
 
@@ -65,10 +75,6 @@ const computeNewBoundaries = (firstLayer: number, layers: number[], boundaries: 
 	return newBoundaries
 }
 
-
-
-
-
 const getInitialBoundaries = (initBoundaries: number[]): number[][] => {
 	const boundaries: number[] = [...initBoundaries]
 	let layers: number[] = []
@@ -82,9 +88,7 @@ const getInitialBoundaries = (initBoundaries: number[]): number[][] => {
 	return [boundaries, layers]
 }
 
-
-
-const expandStaticLayers = (initBoundaries: number[], minHeight: number): number[] => {
+const expandStaticLayers = (initBoundaries: number[], minHeight: number, options: Options): number[] => {
 	let [boundaries, layers] = getInitialBoundaries(initBoundaries)
 
 	//Find first skinny layer
@@ -122,12 +126,12 @@ const expandStaticLayers = (initBoundaries: number[], minHeight: number): number
 		N -= s
 	})
 
-	const newBoundaries = computeNewBoundaries(firstLayer, layers, boundaries, delta, set, N)
+	const newBoundaries = computeNewBoundaries(firstLayer, layers, boundaries, delta, set, N, options)
 
-	return expandStaticLayers(newBoundaries, minHeight)
+	return expandStaticLayers(newBoundaries, minHeight, options)
 }
 
-const expandArrayLayers = (initBoundaries: number[], minHeight: number[]): number[] => {
+const expandArrayLayers = (initBoundaries: number[], minHeight: number[], options: Options): number[] => {
 	let [boundaries, layers] = getInitialBoundaries(initBoundaries)
 
 	//Find first skinny layer
@@ -167,21 +171,22 @@ const expandArrayLayers = (initBoundaries: number[], minHeight: number[]): numbe
 		N -= s
 	})
 
-	const newBoundaries = computeNewBoundaries(firstLayer, layers, boundaries, delta, set, N)
+	const newBoundaries = computeNewBoundaries(firstLayer, layers, boundaries, delta, set, N, options)
 
-	return expandArrayLayers(newBoundaries, minHeight)
+	return expandArrayLayers(newBoundaries, minHeight, options)
 }
 
+const expandLayers = (initBoundaries: number[], minHeight: number | number[] = 20, options: Options = defaultOptions): number[] => {
+	const opts: Options = {
+		...defaultOptions,
+		...options
+	}
 
-
-
-
-const expandLayers = (initBoundaries: number[], minHeight: number | number[] = 20): number[] => {
 	if (minHeight instanceof Array) {
-		return expandArrayLayers(initBoundaries, minHeight)
+		return expandArrayLayers(initBoundaries, minHeight, opts)
 	}
 	else {
-		return expandStaticLayers(initBoundaries, minHeight)
+		return expandStaticLayers(initBoundaries, minHeight, opts)
 	}
 }
 
