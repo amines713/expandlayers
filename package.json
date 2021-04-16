@@ -1,12 +1,12 @@
 {
   "name": "expandlayers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-	"main": "dist/index.ts",
+  "main": "dist/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-		"prepare": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,7 @@
   "devDependencies": {
     "typescript": "^4.2.4"
   },
-	"files": ["dist/**/*"]
+  "files": [
+    "dist/**/*"
+  ]
 }
