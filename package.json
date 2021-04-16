@@ -1,0 +1,26 @@
+{
+  "name": "expandlayers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amines713/expandlayers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amines713/expandlayers/issues"
+  },
+  "homepage": "https://github.com/amines713/expandlayers#readme",
+  "dependencies": {
+    "esbuild": "^0.11.11",
+    "timm": "^1.7.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
