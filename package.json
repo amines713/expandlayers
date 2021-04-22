@@ -2,7 +2,7 @@
   "name": "expandlayers",
   "version": "1.0.3",
   "description": "",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
